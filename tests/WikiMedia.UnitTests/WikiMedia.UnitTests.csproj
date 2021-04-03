@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="prueba.gz" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="prueba.gz" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FakeItEasy" Version="7.0.1" />
+    <PackageReference Include="FluentAssertions" Version="5.10.3" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.1.0" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
+    <PackageReference Include="coverlet.collector" Version="1.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\WikiMedia.Core\WikiMedia.Core.csproj" />
+    <ProjectReference Include="..\..\src\WikiMedia.Domain\WikiMedia.Domain.csproj" />
+    <ProjectReference Include="..\..\src\WikiMedia.Infrastructure\WikiMedia.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

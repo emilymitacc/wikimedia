@@ -1,0 +1,60 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30517.126
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WikiMedia.Terminal", "src\WikiMedia.Terminal\WikiMedia.Terminal.csproj", "{F78BBB2E-ACD1-41CA-80AC-1FC3D6A478D7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WikiMedia.UnitTests", "tests\WikiMedia.UnitTests\WikiMedia.UnitTests.csproj", "{98B13A73-F244-49BA-833B-3F7FA5D129BC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WikiMedia.Infrastructure", "src\WikiMedia.Infrastructure\WikiMedia.Infrastructure.csproj", "{DD8F3EA9-CB97-4774-9134-C41A75BE9314}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WikiMedia.Core", "src\WikiMedia.Core\WikiMedia.Core.csproj", "{35A8FAEB-73E6-4E73-9C88-7995D1CF26DC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WikiMedia.Domain", "src\WikiMedia.Domain\WikiMedia.Domain.csproj", "{CA22720F-29C6-4004-9C08-A4B965D3DBFE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{31CB526A-C8BB-4F54-90DE-8F98DA477491}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{B58E7D22-A789-4ABB-B1A6-47E59283DE45}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F78BBB2E-ACD1-41CA-80AC-1FC3D6A478D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F78BBB2E-ACD1-41CA-80AC-1FC3D6A478D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F78BBB2E-ACD1-41CA-80AC-1FC3D6A478D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F78BBB2E-ACD1-41CA-80AC-1FC3D6A478D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98B13A73-F244-49BA-833B-3F7FA5D129BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98B13A73-F244-49BA-833B-3F7FA5D129BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98B13A73-F244-49BA-833B-3F7FA5D129BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98B13A73-F244-49BA-833B-3F7FA5D129BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD8F3EA9-CB97-4774-9134-C41A75BE9314}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD8F3EA9-CB97-4774-9134-C41A75BE9314}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD8F3EA9-CB97-4774-9134-C41A75BE9314}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD8F3EA9-CB97-4774-9134-C41A75BE9314}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35A8FAEB-73E6-4E73-9C88-7995D1CF26DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35A8FAEB-73E6-4E73-9C88-7995D1CF26DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35A8FAEB-73E6-4E73-9C88-7995D1CF26DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35A8FAEB-73E6-4E73-9C88-7995D1CF26DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA22720F-29C6-4004-9C08-A4B965D3DBFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA22720F-29C6-4004-9C08-A4B965D3DBFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA22720F-29C6-4004-9C08-A4B965D3DBFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA22720F-29C6-4004-9C08-A4B965D3DBFE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F78BBB2E-ACD1-41CA-80AC-1FC3D6A478D7} = {31CB526A-C8BB-4F54-90DE-8F98DA477491}
+		{98B13A73-F244-49BA-833B-3F7FA5D129BC} = {B58E7D22-A789-4ABB-B1A6-47E59283DE45}
+		{DD8F3EA9-CB97-4774-9134-C41A75BE9314} = {31CB526A-C8BB-4F54-90DE-8F98DA477491}
+		{35A8FAEB-73E6-4E73-9C88-7995D1CF26DC} = {31CB526A-C8BB-4F54-90DE-8F98DA477491}
+		{CA22720F-29C6-4004-9C08-A4B965D3DBFE} = {31CB526A-C8BB-4F54-90DE-8F98DA477491}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6935F28A-9D06-49B1-8CD1-8A24BEDD5F53}
+	EndGlobalSection
+EndGlobal
