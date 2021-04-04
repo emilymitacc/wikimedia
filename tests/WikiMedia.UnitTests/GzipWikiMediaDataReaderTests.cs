@@ -1,4 +1,6 @@
-﻿using FluentAssertions;
+﻿using FakeItEasy;
+using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Globalization;
@@ -16,12 +18,17 @@ namespace WikiMedia.UnitTests
     public class GzipWikiMediaDataReaderTests
     {
         private GzipWikimediaDataReader reader = null;
+        private ILogger<GzipWikimediaDataReader> logger;
+        private IHttpClientFactory httpClientFactory;
 
         [TestInitialize]
         public void TestInitialize()
         {
             var httpClient = new HttpClient(new FakeMessageHandler());
-            reader = new GzipWikimediaDataReader(httpClient);
+            httpClientFactory = A.Fake<IHttpClientFactory>();
+            A.CallTo(() => httpClientFactory.CreateClient("wikimedia")).Returns(httpClient);
+            logger = A.Fake<ILogger<GzipWikimediaDataReader>>();
+            reader = new GzipWikimediaDataReader(httpClientFactory, logger);
         }
 
         [TestMethod]
@@ -53,16 +60,20 @@ namespace WikiMedia.UnitTests
         public async Task Given_400_status_code_When_DownloadFileAsync_is_Called_Then_ThrowException()
         {
             var url = "https://dumps.wikimedia.org/other/pageviews/2021/2021-01/pageviews-20210101-020000.gz";
-            reader = new GzipWikimediaDataReader(new HttpClient(new FakeMessageHandler
-                (async (r) =>
-            {
-                Assert.AreEqual(url, r.RequestUri.ToString());
 
-                return new HttpResponseMessage
+            A.CallTo(() => httpClientFactory.CreateClient("wikimedia"))
+                .Returns(new HttpClient(new FakeMessageHandler
+                (async (r) =>
                 {
-                    StatusCode = System.Net.HttpStatusCode.BadRequest
-                };
-            })));
+                    Assert.AreEqual(url, r.RequestUri.ToString());
+
+                    return new HttpResponseMessage
+                    {
+                        StatusCode = System.Net.HttpStatusCode.BadRequest
+                    };
+                })));
+
+            reader = new GzipWikimediaDataReader(httpClientFactory, logger);
 
             var contentResult = await reader.DownloadFileAsync(url);
         }

@@ -1,4 +1,5 @@
 ﻿using ICSharpCode.SharpZipLib.GZip;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -12,19 +13,23 @@ namespace WikiMedia.Terminal
     public class GzipWikimediaDataReader : IWikimediaDataReader
     {
         public static string principalUrl = "https://dumps.wikimedia.org/other/pageviews";
-        private readonly HttpClient httpClient;
+        private readonly IHttpClientFactory httpClient;
+        private readonly ILogger<GzipWikimediaDataReader> logger;
 
-        public GzipWikimediaDataReader(HttpClient httpClient)
+        public GzipWikimediaDataReader(IHttpClientFactory httpClient, ILogger<GzipWikimediaDataReader> logger)
         {
             this.httpClient = httpClient;
+            this.logger = logger;
         }
 
         public async Task<IEnumerable<WikiMediaRow>> GetDataByHourAsync(DateTime dateTime)
         {
             var url = GenerateUrl(dateTime);
+            logger.LogInformation($"Starting download from {url} {DateTime.Now}");
             var valuesDate = GetValuesDateTime(dateTime);
             var hour = valuesDate.htt;
             var content = await DownloadFileAsync(url);
+            logger.LogInformation($"Finishing download from {url} {DateTime.Now}");
             return ReadFile(content).Select(l =>
             {
                 l.hour = hour;
@@ -33,9 +38,11 @@ namespace WikiMedia.Terminal
         }
 
         public async Task<Stream> DownloadFileAsync(string url)
-        {
-            var response = await httpClient.GetAsync(url);
-            response.EnsureSuccessStatusCode();
+        {            
+            var client = httpClient.CreateClient("wikimedia");
+            var response = await client.GetAsync(url);
+            response.EnsureSuccessStatusCode();         
+
             using (var fileContent = await response.Content.ReadAsStreamAsync())
             {
                 var extracted = await ExtractGZipMemory(fileContent);
@@ -58,6 +65,7 @@ namespace WikiMedia.Terminal
         public IEnumerable<WikiMediaRow> ReadFile(Stream fileContent)
         {
             var rows = new List<WikiMediaRow>();
+            using (fileContent)
             using (var file = new StreamReader(fileContent))
             {
                 while (!file.EndOfStream)

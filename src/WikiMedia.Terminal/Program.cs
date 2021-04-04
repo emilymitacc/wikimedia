@@ -1,50 +1,50 @@
-﻿using Autofac;
-using ICSharpCode.SharpZipLib.Core;
-using ICSharpCode.SharpZipLib.GZip;
-using Microsoft.Extensions.Http;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Polly;
 using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Polly.Extensions.Http;
 
 namespace WikiMedia.Terminal
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
 
-            var builder = new ContainerBuilder();
-            
-            var retryPolicy = Policy.HandleResult<HttpResponseMessage>(r => r.StatusCode == HttpStatusCode.ServiceUnavailable)
-                .WaitAndRetryAsync(20, i => TimeSpan.FromSeconds(7));
+            var builder = new HostBuilder();
+            builder.ConfigureLogging((context, b) =>
+            {
+#if DEBUG
+                b.AddConsole();
+#endif
+                b.AddDebug();
+            });
+            builder.ConfigureServices(services =>
+            {                                
+                services.AddHttpClient("wikimedia")                
+                  .AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(10, retryAttempt => TimeSpan.FromSeconds(Math.Min(30 * retryAttempt, 120))));
 
-            builder.RegisterInstance(new HttpClient(new PolicyHttpMessageHandler(retryPolicy) { 
-                InnerHandler = new HttpClientHandler()
-            }));
-            builder.RegisterType<GzipWikimediaDataReader>().AsImplementedInterfaces();
-            builder.RegisterType<ConsoleOutput>().AsImplementedInterfaces();
-            builder.RegisterType<SystemTimeService>().AsImplementedInterfaces();
-            builder.RegisterType<WikiMediaPageViewsProcessor>().AsSelf();            
+                services.AddScoped<IWikimediaDataReader, GzipWikimediaDataReader>();
+                services.AddScoped<IStatsOutput, ConsoleOutput>();
+                services.AddScoped<IDateTimeService, SystemTimeService>();
+                services.AddScoped<WikiMediaPageViewsProcessor>();
+            });
 
-            var container = builder.Build();
-
-            Console.WriteLine($"INICIO: {DateTime.Now}");
-
-            var options = new WikiMediaRunOptions() { LastHours = 5 };
-            var processor = container.Resolve<WikiMediaPageViewsProcessor>();
-            processor.Process(options).Wait();
-
-            Console.WriteLine($"FIN: {DateTime.Now}");
+            var host = builder.Build();
+            using (host)
+            {
+                var processor = host.Services.GetService(typeof(WikiMediaPageViewsProcessor)) as WikiMediaPageViewsProcessor;
+                var options = new WikiMediaRunOptions() { LastHours = 5 };
+                await processor.Process(options);
+            }
 
             Console.ReadLine();
-        }     
+        }
     }
 }

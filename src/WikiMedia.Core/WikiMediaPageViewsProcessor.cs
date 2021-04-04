@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -12,32 +14,61 @@ namespace WikiMedia.Terminal
         private readonly IWikimediaDataReader wikimediaDataReader;
         private readonly IStatsOutput statsOutput;
         private readonly IDateTimeService dateTimeService;
+        private readonly ILogger<WikiMediaPageViewsProcessor> logger;
 
-        public WikiMediaPageViewsProcessor(IWikimediaDataReader wikimediaDataReader, IStatsOutput statsOutput, IDateTimeService dateTimeService)
+        public WikiMediaPageViewsProcessor(IWikimediaDataReader wikimediaDataReader, IStatsOutput statsOutput, IDateTimeService dateTimeService
+            , ILogger<WikiMediaPageViewsProcessor> logger)
         {
             this.wikimediaDataReader = wikimediaDataReader;
             this.statsOutput = statsOutput;
             this.dateTimeService = dateTimeService;
+            this.logger = logger;
         }
 
         public async Task Process(WikiMediaRunOptions options)
         {
+            var overallStopWatch = new Stopwatch();
+            overallStopWatch.Start();
             var listDateTime = GetListDateWithHour(dateTimeService.UtcNow, options.LastHours);
+            
+            logger.LogInformation($"Starting with {options.LastHours} task(s)");
 
-            var tasks = listDateTime.Select(async(dt) =>
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
+            var dataTasks = listDateTime.Select((dt) => Task.Run(async () =>
             {
+                logger.LogInformation($"Starting to download: {dt}");
                 var rawData = await wikimediaDataReader.GetDataByHourAsync(dt);
-                var result = SummarizeViewsPerDomainCodeAndPageTitle(rawData);
-                var wikiMediaOutputContext = new WikiMediaOutputContext(result);
-                return wikiMediaOutputContext;
-            });
+                logger.LogInformation($"Starting to summarize: {dt}");
+                return rawData;
 
-            await Task.WhenAll(tasks);
+            })).ToArray();            
 
-            foreach (var taskCompleted in tasks)
+            await Task.WhenAll(dataTasks);
+            stopWatch.Stop();
+            logger.LogInformation($"Download and grouping completed after {stopWatch.Elapsed.TotalSeconds:0.00}s");
+
+            var chunks = new List<WikiMediaOutputContext>();
+            stopWatch.Restart();
+            logger.LogInformation($"Starting the summarize process:");
+            for (int i = 0; i < dataTasks.Length; i++)
             {
-                await statsOutput.WriteOutput(taskCompleted.Result);
+                logger.LogInformation($"Starting to summarize: {i+1}/{dataTasks.Length}");
+                var result = SummarizeViewsPerDomainCodeAndPageTitle(dataTasks[i].Result);
+                logger.LogInformation($"Summarizing process completed: {i+1}/{dataTasks.Length}");
+
+                var wikiMediaOutputContext = new WikiMediaOutputContext(result);
+                chunks.Add(wikiMediaOutputContext);
+            }            
+            stopWatch.Stop();
+            logger.LogInformation($"Summarizing process completed after {stopWatch.Elapsed.TotalSeconds:0.00}s");
+
+            foreach (var chunk in chunks)
+            {
+                await statsOutput.WriteOutput(chunk);
             }
+
+            logger.LogInformation($"All the process completed after {overallStopWatch.Elapsed.TotalSeconds:0.00}s");
         }
 
         public List<DateTime> GetListDateWithHour(DateTime dateTime, int lastHours)
@@ -54,7 +85,7 @@ namespace WikiMedia.Terminal
 
         public IEnumerable<WikiMediaRow> SummarizeViewsPerDomainCodeAndPageTitle(IEnumerable<WikiMediaRow> wikiMediaRows)
         {
-            var consolidatedRows = from w in wikiMediaRows.AsParallel()
+            var consolidatedRows = from w in wikiMediaRows
                                    group w by new { w.hour, w.domain_code, w.page_title }
                                    into q
                                    select new WikiMediaRow
@@ -65,7 +96,7 @@ namespace WikiMedia.Terminal
                                        count_views = q.Sum(x => x.count_views)
                                    };
 
-            var maxViewsPerDomainCode = from w in consolidatedRows.AsParallel()
+            var maxViewsPerDomainCode = from w in consolidatedRows
                                         group w by new { w.hour, w.domain_code }
                                         into q
                                         select new WikiMediaRow
@@ -87,7 +118,7 @@ namespace WikiMedia.Terminal
                              count_views = mv.count_views
                          };
 
-            return result.ToArray();
+            return result.AsParallel().ToArray();
         }
     }
 

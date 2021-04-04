@@ -1,5 +1,6 @@
 ﻿using FakeItEasy;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace WikiMedia.UnitTests
         private IWikimediaDataReader reader;
         private IStatsOutput output;
         private IDateTimeService timeService;
+        private ILogger<WikiMediaPageViewsProcessor> logger;
         private WikiMediaPageViewsProcessor processor = null;
 
         [TestInitialize]
@@ -23,7 +25,8 @@ namespace WikiMedia.UnitTests
             reader = A.Fake<IWikimediaDataReader>();
             output = A.Fake<IStatsOutput>();
             timeService = A.Fake<IDateTimeService>();
-            processor = new WikiMediaPageViewsProcessor(reader, output, timeService);
+            logger = A.Fake<ILogger<WikiMediaPageViewsProcessor>>();
+            processor = new WikiMediaPageViewsProcessor(reader, output, timeService, logger);
         }
 
         [TestMethod]
