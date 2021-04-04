@@ -1,4 +1,4 @@
-﻿namespace WikiMedia.Terminal
+﻿namespace WikiMedia.Core
 {
     public class WikiMediaRunOptions
     {

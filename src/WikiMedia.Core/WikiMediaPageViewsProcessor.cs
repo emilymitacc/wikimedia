@@ -2,12 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using WikiMedia.Core.Interfaces;
+using WikiMedia.Domain;
 
-namespace WikiMedia.Terminal
+namespace WikiMedia.Core
 {
     public class WikiMediaPageViewsProcessor
     {

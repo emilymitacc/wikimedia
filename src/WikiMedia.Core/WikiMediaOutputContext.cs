@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using WikiMedia.Domain;
 
-namespace WikiMedia.Terminal
+namespace WikiMedia.Core
 {
     public class WikiMediaOutputContext
     {

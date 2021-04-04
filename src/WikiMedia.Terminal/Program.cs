@@ -2,12 +2,12 @@
 using Microsoft.Extensions.Hosting;
 using Polly;
 using System;
-using System.Net;
-using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Polly.Extensions.Http;
+using WikiMedia.Core;
+using WikiMedia.Core.Interfaces;
+using WikiMedia.Infrastructure;
 
 namespace WikiMedia.Terminal
 {
@@ -43,8 +43,6 @@ namespace WikiMedia.Terminal
                 var options = new WikiMediaRunOptions() { LastHours = 5 };
                 await processor.Process(options);
             }
-
-            Console.ReadLine();
         }
     }
 }

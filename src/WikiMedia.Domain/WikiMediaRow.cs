@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace WikiMedia.Terminal
+namespace WikiMedia.Domain
 {
     public class WikiMediaRow
     {

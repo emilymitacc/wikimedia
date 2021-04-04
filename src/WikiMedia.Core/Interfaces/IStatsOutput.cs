@@ -2,7 +2,7 @@
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WikiMedia.Terminal
+namespace WikiMedia.Core.Interfaces
 {
     public interface IStatsOutput
     {

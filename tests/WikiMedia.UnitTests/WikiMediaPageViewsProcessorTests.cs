@@ -5,7 +5,9 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using WikiMedia.Terminal;
+using WikiMedia.Core;
+using WikiMedia.Core.Interfaces;
+using WikiMedia.Domain;
 
 namespace WikiMedia.UnitTests
 {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace WikiMedia.Terminal
+namespace WikiMedia.Core.Interfaces
 {
     public interface IDateTimeService
     {

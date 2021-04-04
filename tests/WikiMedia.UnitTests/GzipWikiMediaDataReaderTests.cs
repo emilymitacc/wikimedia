@@ -9,7 +9,8 @@ using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
-using WikiMedia.Terminal;
+using WikiMedia.Domain;
+using WikiMedia.Infrastructure;
 
 namespace WikiMedia.UnitTests
 {

@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using WikiMedia.Domain;
 
-namespace WikiMedia.Terminal
+namespace WikiMedia.Core.Interfaces
 {
     public interface IWikimediaDataReader
     {

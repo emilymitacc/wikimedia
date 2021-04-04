@@ -3,8 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using WikiMedia.Core;
+using WikiMedia.Core.Interfaces;
 
-namespace WikiMedia.Terminal
+namespace WikiMedia.Infrastructure
 {
     public class ConsoleOutput : IStatsOutput
     {

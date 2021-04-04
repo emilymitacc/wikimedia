@@ -7,8 +7,10 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using WikiMedia.Core.Interfaces;
+using WikiMedia.Domain;
 
-namespace WikiMedia.Terminal
+namespace WikiMedia.Infrastructure
 {
     public class GzipWikimediaDataReader : IWikimediaDataReader
     {
@@ -86,13 +88,14 @@ namespace WikiMedia.Terminal
 
         public EDateTime GetValuesDateTime(DateTime dateTime)
         {
-            var newDateTime = new EDateTime();
-
-            newDateTime.yyyy = dateTime.ToString("yyyy", CultureInfo.InvariantCulture);
-            newDateTime.MM = dateTime.ToString("MM", CultureInfo.InvariantCulture);
-            newDateTime.dd = dateTime.ToString("dd", CultureInfo.InvariantCulture);
-            newDateTime.HH = dateTime.ToString("HH", CultureInfo.InvariantCulture);
-            newDateTime.htt = dateTime.ToString("htt", CultureInfo.InvariantCulture);
+            var newDateTime = new EDateTime
+            {
+                yyyy = dateTime.ToString("yyyy", CultureInfo.InvariantCulture),
+                MM = dateTime.ToString("MM", CultureInfo.InvariantCulture),
+                dd = dateTime.ToString("dd", CultureInfo.InvariantCulture),
+                HH = dateTime.ToString("HH", CultureInfo.InvariantCulture),
+                htt = dateTime.ToString("htt", CultureInfo.InvariantCulture)
+            };
 
             return newDateTime;
         }

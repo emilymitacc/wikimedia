@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 
-namespace WikiMedia.Terminal
+namespace WikiMedia.Domain
 {
     public class EDateTime
     {

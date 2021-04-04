@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "WikiMedia.Terminal": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
